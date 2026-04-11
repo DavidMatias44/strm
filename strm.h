@@ -47,13 +47,14 @@ void transform(char **s, bool remove_vowels_flag, bool remove_duplicates_flag)
     }
 
     if (remove_duplicates_flag) {
+        count_duplicates(*s, s_len);
         remove_duplicates(s, s_len);
     }
 }
 
 void remove_non_alpha(char **src, size_t *size)
 {
-    char *aux = (char *)malloc(sizeof(char)*(*size));
+    char *aux = (char *)malloc(sizeof(char)*(*size) + 1);
     size_t count = 0;
     for (size_t i = 0; i < *size; ++i) {
         char c = (*src)[i];
@@ -77,7 +78,7 @@ void count_vowels()
 
 void remove_vowels(char **s, size_t *size)
 {
-    char *aux = (char *)malloc(sizeof(char)*(*size));
+    char *aux = (char *)malloc(sizeof(char)*(*size) + 1);
     size_t count = 0;
     for (size_t i = 0; i < *size; ++i) {
         char c = (*s)[i];
@@ -105,9 +106,7 @@ void count_duplicates(char *s, const size_t size)
 
 void remove_duplicates(char **s, size_t size)
 {
-    count_duplicates(*s, size);
-
-    char *aux = (char *)malloc(sizeof(char)*size);
+    char *aux = (char *)malloc(sizeof(char)*size + 1);
     size_t count = 0;
     for (size_t i = 0; i < size; ++i) {
         char c = (*s)[i];
