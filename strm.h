@@ -19,6 +19,7 @@ void count_vowels();
 void remove_vowels(char **s, size_t *size);
 void count_duplicates(char *s, const size_t size);
 void remove_duplicates(char **s, size_t size);
+int save_in_file(char* s, const char *file_name);
 int table_at(const char c);
 void print_table();
 int compare(const void *a, const void *b);
@@ -30,9 +31,10 @@ int compare(const void *a, const void *b);
 void print_usage()
 {
     printf("Usage: main <string>\n");
-    printf("-v\t main -v <string>   \t remove vowels\n");
-    printf("-d\t main -d <string>   \t remove duplicates\n");
-    printf("-s\t main -s <string>   \t sort the output string\n");
+    printf("-v\t main -v <string>   \t\t\t remove vowels\n");
+    printf("-d\t main -d <string>   \t\t\t remove duplicates\n");
+    printf("-s\t main -s <string>   \t\t\t sort the output string\n");
+    printf("-o\t main -o <file-name> <string>   \t save output string into file\n");
 }
 
 void transform(char **s, bool remove_vowels_flag, bool remove_duplicates_flag)
@@ -117,6 +119,20 @@ void remove_duplicates(char **s, size_t size)
     aux[count] = '\0';
     strcpy(*s, aux);
     free(aux);
+}
+
+int save_in_file(char* s, const char *file_name)
+{
+    FILE *file = fopen(file_name, "w");
+    if (file == NULL) return 1;
+
+    size_t s_len = strlen(s) + 1;
+    sprintf(s, "%s\n", s);
+    size_t bytes_written = fwrite(s, sizeof(char), s_len, file);
+    if (s_len != bytes_written) return 1;
+
+    return 0;
+
 }
 
 int table_at(const char c)
