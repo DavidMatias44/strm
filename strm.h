@@ -6,29 +6,28 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <stdbool.h>
+#include <unistd.h>
 
-int table[26] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
+int table[26] = {0};
 
-void print_usage();
+void print_usage(void);
 void transform(char **s, const bool remove_vowels_flag, const bool remove_duplicates_flag);
 void remove_non_alpha(char **src, size_t *size);
-void count_vowels();
+void count_vowels(void);
 void remove_vowels(char **s, size_t *size);
 void count_duplicates(char *s, const size_t size);
 void remove_duplicates(char **s, size_t size);
 int save_in_file(char* s, const char *file_name);
 int table_at(const char c);
-void print_table();
+void print_table(void);
 int compare(const void *a, const void *b);
 
 #endif // STRM_H
 
 #ifdef STRM_H_IMPLEMENTATION
 
-void print_usage()
+void print_usage(void)
 {
     printf("Usage: main <string>\n");
     printf("-v\t main -v <string>   \t\t\t remove vowels\n");
@@ -70,7 +69,7 @@ void remove_non_alpha(char **src, size_t *size)
     free(aux);
 }
 
-void count_vowels()
+void count_vowels(void)
 {
     char vowels[5] = {'a', 'e', 'i', 'o', 'u'};
     for (size_t i = 0; i < 5; ++i) {
@@ -132,7 +131,6 @@ int save_in_file(char* s, const char *file_name)
     if (s_len != bytes_written) return 1;
 
     return 0;
-
 }
 
 int table_at(const char c)
@@ -141,7 +139,7 @@ int table_at(const char c)
     return table[c - 97];
 }
 
-void print_table()
+void print_table(void)
 {
     int aux = 97;
     for (size_t i = 0; i < 26; ++i) {
@@ -156,4 +154,3 @@ int compare(const void *a, const void *b)
 }
 
 #endif // STRM_H_IMPLEMENTATION
-
