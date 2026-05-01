@@ -12,12 +12,11 @@
 int table[26] = {0};
 
 void print_usage(void);
-void transform(char **s, const bool remove_vowels_flag, const bool remove_duplicates_flag);
-void remove_non_alpha(char **src, size_t *size);
-void count_vowels(void);
-void remove_vowels(char **s, size_t *size);
-void count_duplicates(char *s, const size_t size);
-void remove_duplicates(char **s, size_t size);
+void transform(char *s, const bool remove_vowels, const bool remove_duplicates);
+void remove_non_alpha(char *s);
+void update_table_count_vowels(void);
+void update_table_count_duplicates(char *s);
+void remove_using_table(char *s);
 int save_in_file(char* s, const char *file_name);
 int table_at(const char c);
 void print_table(void);
@@ -36,40 +35,32 @@ void print_usage(void)
     printf("-o\t main -o <file-name> <string>   \t save output string into file\n");
 }
 
-void transform(char **s, bool remove_vowels_flag, bool remove_duplicates_flag)
+void transform(char *s, bool remove_vowels, bool remove_duplicates)
 {
-    size_t s_len = strlen(*s);
+    remove_non_alpha(s);
 
-    remove_non_alpha(s, &s_len);
-
-    if (remove_vowels_flag) {
-        count_vowels();
-        remove_vowels(s, &s_len);
-    }
-
-    if (remove_duplicates_flag) {
-        count_duplicates(*s, s_len);
-        remove_duplicates(s, s_len);
-    }
+    if (remove_vowels)
+        update_table_count_vowels();
+    if (remove_duplicates)
+        update_table_count_duplicates(s);
+    if (remove_vowels || remove_duplicates)
+        remove_using_table(s);
 }
 
-void remove_non_alpha(char **src, size_t *size)
+void remove_non_alpha(char *s)
 {
-    char *aux = (char *)malloc(sizeof(char)*(*size) + 1);
-    size_t count = 0;
-    for (size_t i = 0; i < *size; ++i) {
-        char c = (*src)[i];
-        if (isalpha(c)) {
-            aux[count++] = c;
+    size_t i = 0;
+    size_t j = 0;
+    while (s[i] != '\0') {
+        if (isalpha(s[i])) {
+            s[j++] = s[i];
         }
+        i++;
     }
-    aux[count] = '\0';
-    *size = count;
-    strcpy(*src, aux);
-    free(aux);
+    s[j] = '\0';
 }
 
-void count_vowels(void)
+void update_table_count_vowels(void)
 {
     char vowels[5] = {'a', 'e', 'i', 'o', 'u'};
     for (size_t i = 0; i < 5; ++i) {
@@ -77,47 +68,30 @@ void count_vowels(void)
     }
 }
 
-void remove_vowels(char **s, size_t *size)
+void update_table_count_duplicates(char *s)
 {
-    char *aux = (char *)malloc(sizeof(char)*(*size) + 1);
-    size_t count = 0;
-    for (size_t i = 0; i < *size; ++i) {
-        char c = (*s)[i];
-        if (table_at(c) < 2) {
-            aux[count++] = c;
-        }
-    }
-    aux[count] = '\0';
-    *size = count;
-    strcpy(*s, aux);
-    free(aux);
-}
-
-void count_duplicates(char *s, const size_t size)
-{
-    for (size_t i = 0; i < size; ++i) {
-        char c = s[i];
-        if (isupper(c)) {
-            c += 32; 
+    size_t i = 0;
+    while (s[i] != '\0') {
+        if (isupper(s[i])) {
+            s[i] += 32;
         }
 
-        table[c - 97]++;
+        table[s[i] - 97]++;
+        i++;
     }
 }
 
-void remove_duplicates(char **s, size_t size)
+void remove_using_table(char *s)
 {
-    char *aux = (char *)malloc(sizeof(char)*size + 1);
-    size_t count = 0;
-    for (size_t i = 0; i < size; ++i) {
-        char c = (*s)[i];
-        if (table_at(c) < 2) {
-            aux[count++] = c;
+    size_t i = 0;
+    size_t j = 0;
+    while (s[i] != '\0') {
+        if (table_at(s[i]) < 2) {
+            s[j++] = s[i];
         }
+        i++;
     }
-    aux[count] = '\0';
-    strcpy(*s, aux);
-    free(aux);
+    s[j] = '\0';
 }
 
 int save_in_file(char* s, const char *file_name)

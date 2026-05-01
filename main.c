@@ -43,10 +43,11 @@ int main(int argc, char **argv)
 
     if (optind >= argc) {
         print_usage();
+        exit(EXIT_FAILURE);
     }
    
     str = argv[optind];
-    transform(&str, remove_vowels_flag, remove_dups_flag);
+    transform(str, remove_vowels_flag, remove_dups_flag);
 
     if (sort_result_flag) {
         qsort(str, strlen(str), sizeof(char), compare);
