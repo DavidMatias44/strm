@@ -14,8 +14,7 @@ int table[26] = {0};
 void print_usage(void);
 void transform(char *s, const bool remove_vowels, const bool remove_duplicates);
 void remove_non_alpha(char *s);
-void update_table_count_vowels(void);
-void update_table_count_duplicates(char *s);
+void update_table(char *s);
 void remove_using_table(char *s);
 int save_in_file(char* s, const char *file_name);
 int table_at(const char c);
@@ -40,9 +39,9 @@ void transform(char *s, bool remove_vowels, bool remove_duplicates)
     remove_non_alpha(s);
 
     if (remove_vowels)
-        update_table_count_vowels();
+        update_table("aeiou\0");
     if (remove_duplicates)
-        update_table_count_duplicates(s);
+        update_table(s);
     if (remove_vowels || remove_duplicates)
         remove_using_table(s);
 }
@@ -60,15 +59,7 @@ void remove_non_alpha(char *s)
     s[j] = '\0';
 }
 
-void update_table_count_vowels(void)
-{
-    char vowels[5] = {'a', 'e', 'i', 'o', 'u'};
-    for (size_t i = 0; i < 5; ++i) {
-        table[vowels[i] - 97] = 2;
-    }
-}
-
-void update_table_count_duplicates(char *s)
+void update_table(char *s)
 {
     size_t i = 0;
     while (s[i] != '\0') {
